@@ -1,6 +1,6 @@
 # AutoAIRAC
 
-[![CI](https://github.com/YOUR_USERNAME/AutoAIRAC/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/AutoAIRAC/actions/workflows/ci.yml)
+[![CI](https://github.com/StarNumber12046/AutoAIRAC/actions/workflows/ci.yml/badge.svg)](https://github.com/StarNumber12046/AutoAIRAC/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 
@@ -30,7 +30,7 @@ Each simulator is a pluggable adapter under `src/autoairac/simulators/`. Add a n
 ## Quick start
 
 ```powershell
-git clone https://github.com/YOUR_USERNAME/AutoAIRAC.git
+git clone https://github.com/StarNumber12046/AutoAIRAC.git
 cd AutoAIRAC
 uv sync --group dev
 
@@ -117,16 +117,15 @@ uv build
 
 ## Releasing on GitHub
 
-1. Replace `YOUR_USERNAME` in `README.md` and `CHANGELOG.md` with your GitHub username/org.
-2. Create the repository on GitHub (empty, no README).
-3. Push:
+1. Create the repository on GitHub (empty, no README).
+2. Push:
 
    ```powershell
-   git remote add origin https://github.com/YOUR_USERNAME/AutoAIRAC.git
+   git remote add origin https://github.com/StarNumber12046/AutoAIRAC.git
    git push -u origin main
    ```
 
-4. Tag a release (triggers the release workflow and uploads build artifacts):
+3. Tag a release (triggers the release workflow and uploads build artifacts):
 
    ```powershell
    git tag v0.1.0

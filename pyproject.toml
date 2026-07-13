@@ -53,10 +53,10 @@ package = true
 autoairac = "autoairac.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/YOUR_USERNAME/AutoAIRAC"
-Repository = "https://github.com/YOUR_USERNAME/AutoAIRAC"
-Issues = "https://github.com/YOUR_USERNAME/AutoAIRAC/issues"
-Changelog = "https://github.com/YOUR_USERNAME/AutoAIRAC/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/StarNumber12046/AutoAIRAC"
+Repository = "https://github.com/StarNumber12046/AutoAIRAC"
+Issues = "https://github.com/StarNumber12046/AutoAIRAC/issues"
+Changelog = "https://github.com/StarNumber12046/AutoAIRAC/blob/main/CHANGELOG.md"
 
 [tool.hatch.build.targets.wheel]
 packages = ["autoairac"]

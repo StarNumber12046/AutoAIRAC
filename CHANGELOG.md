@@ -25,4 +25,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - X-Plane 12 cycle detection from multi-line navdata headers
 - X-Plane torrent selection limited to `xplane12_native` archives
 
-[0.1.0]: https://github.com/YOUR_USERNAME/AutoAIRAC/releases/tag/v0.1.0
+[0.1.0]: https://github.com/StarNumber12046/AutoAIRAC/releases/tag/v0.1.0
