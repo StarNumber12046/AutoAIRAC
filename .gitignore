@@ -1,0 +1,32 @@
+# Local secrets and config
+config.yaml
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+
+# Runtime / staging
+*.log
+_test_staging/
+_debug_search.html
+
+# IDE / editor / agent harness (not part of the published project)
+.idea/
+.vscode/
+mcps/
+terminals/
+.cursor/
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store

@@ -1,0 +1,40 @@
+# Copy to config.yaml and adjust paths/credentials.
+
+simulators:
+  # Enabled simulators: xplane12, msfs2020, msfs2024, p3d5, fsx
+  enabled:
+    - xplane12
+
+paths:
+  xplane12: "C:/X-Plane 12"
+  msfs2020_community: ""   # auto-detected if empty
+  msfs2024_community: ""
+  p3d5: "C:/Program Files/Lockheed Martin/Prepar3D v5"
+  fsx: "C:/Program Files (x86)/Steam/steamapps/common/FSX"
+
+rutracker:
+  base_url: "https://rutracker.org"
+  username: ""
+  password: ""
+  # Search query template; {cycle} is replaced with the target AIRAC cycle.
+  search_query: "AIRAC {cycle}"
+  # Optional: pin a known topic ID instead of searching (faster, more reliable).
+  topic_id: null
+
+qbittorrent:
+  host: "http://127.0.0.1:8080"
+  username: "admin"
+  password: "adminadmin"
+  download_category: "AutoAIRAC"
+  # Where qBittorrent saves completed torrents (used to locate extracted zips).
+  save_path: ""
+
+notifications:
+  app_id: "AutoAIRAC"
+  enabled: true
+
+# Staging directory for downloaded/extracted archives before install.
+staging_dir: "%LOCALAPPDATA%/AutoAIRAC/staging"
+
+# How often to run when using --watch (minutes).
+watch_interval_minutes: 1440

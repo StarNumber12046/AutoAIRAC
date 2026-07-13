@@ -1,0 +1,69 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "autoairac"
+version = "0.1.0"
+description = "Automatically check, download, and install expired AIRAC navdata for flight simulators"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "AutoAIRAC contributors" }]
+keywords = ["airac", "flight-simulator", "navdata", "x-plane", "msfs", "qbittorrent"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Games/Entertainment :: Simulation",
+]
+dependencies = [
+    "beautifulsoup4>=4.12",
+    "httpx>=0.27",
+    "lxml>=5.0",
+    "pydantic>=2.0",
+    "pydantic-settings>=2.0",
+    "pyyaml>=6.0",
+    "qbittorrent-api>=2024.5.0",
+    "winotify>=1.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+]
+
+[tool.uv]
+package = true
+
+[project.scripts]
+autoairac = "autoairac.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/YOUR_USERNAME/AutoAIRAC"
+Repository = "https://github.com/YOUR_USERNAME/AutoAIRAC"
+Issues = "https://github.com/YOUR_USERNAME/AutoAIRAC/issues"
+Changelog = "https://github.com/YOUR_USERNAME/AutoAIRAC/blob/main/CHANGELOG.md"
+
+[tool.hatch.build.targets.wheel]
+packages = ["autoairac"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"src/autoairac" = "autoairac"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
