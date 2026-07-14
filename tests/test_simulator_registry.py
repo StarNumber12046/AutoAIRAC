@@ -25,27 +25,27 @@ def test_create_p3d4_adapter() -> None:
     assert adapter.display_name == "Prepar3D v4"
 
 
-def test_p3d4_pattern_excludes_p3d5_pack() -> None:
+def test_p3d4_pattern_matches_v4_archives() -> None:
     from autoairac.download.qbittorrent import QBittorrentDownloader
 
     patterns = create_adapter("p3d4", PathsConfig()).torrent_file_patterns()
     assert QBittorrentDownloader._matches_any(
-        "Navigraph AIRAC 2607/as_p3d4_2607.zip", patterns
+        "Navigraph AIRAC 2607/as_p3dv4_2607.zip", patterns
     )
-    assert not QBittorrentDownloader._matches_any(
-        "Navigraph AIRAC 2607/as_p3d5_2607.zip", patterns
+    assert QBittorrentDownloader._matches_any(
+        "Navigraph AIRAC 2607/as_p3dv45_2607.zip", patterns
     )
 
 
-def test_p3d5_pattern_excludes_p3d4_pack() -> None:
+def test_p3d5_pattern_matches_v45_combined_pack() -> None:
     from autoairac.download.qbittorrent import QBittorrentDownloader
 
     patterns = create_adapter("p3d5", PathsConfig()).torrent_file_patterns()
     assert QBittorrentDownloader._matches_any(
-        "Navigraph AIRAC 2607/p3dv5_2607.zip", patterns
+        "Navigraph AIRAC 2607/as_p3dv45_2607.zip", patterns
     )
     assert not QBittorrentDownloader._matches_any(
-        "Navigraph AIRAC 2607/p3dv4_2607.zip", patterns
+        "Navigraph AIRAC 2607/as_p3dv4_2607.zip", patterns
     )
 
 
