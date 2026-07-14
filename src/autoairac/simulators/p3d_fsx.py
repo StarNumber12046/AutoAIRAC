@@ -103,7 +103,7 @@ class P3D5Adapter(_LegacySimAdapter):
     _navdata_subdir = "NavData"
 
     def torrent_file_patterns(self) -> tuple[str, ...]:
-        return ("*p3dv5*", "*p3d5*", "*p3d_v5*", "*as_p3d5*", "*as_p3dv5*")
+        return ("*p3dv5*", "*p3d5*", "*p3d_v5*", "*p3dv45*", "*as_p3d5*", "*as_p3dv5*", "*as_p3dv45*")
 
 
 class FSXAdapter(_LegacySimAdapter):

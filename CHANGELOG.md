@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- P3D v5 torrent patterns now include the combined `as_p3dv45` archive used in current AIRAC torrents
 - P3D v5 and FSX torrent patterns are now version-specific (no longer share broad `*p3d*` / `*fsx*` patterns)
 
 ## [0.1.0] - 2026-07-13
