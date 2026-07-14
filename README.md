@@ -15,7 +15,8 @@ Automatically checks whether installed AIRAC navdata is expired for your flight 
 | `xplane12` | X-Plane 12 | `Custom Data/` | `*xplane12_native*` |
 | `msfs2020` | MSFS 2020 | `%LOCALAPPDATA%/Packages/.../Community/` | `*msfs*` |
 | `msfs2024` | MSFS 2024 | Same (2024 package name) | `*msfs*` |
-| `p3d5` | Prepar3D v5 | `NavData/` | `*p3d*`, `*aerosoft*` |
+| `p3d4` | Prepar3D v4 | `NavData/` | `*p3dv4*`, `*p3d4*`, `*as_p3d4*` |
+| `p3d5` | Prepar3D v5 | `NavData/` | `*p3dv5*`, `*p3d5*`, `*as_p3d5*` |
 | `fsx` | FSX / FSX:SE | `NavData/` | `*fsx*`, `*aerosoft*` |
 
 Each simulator is a pluggable adapter under `src/autoairac/simulators/`. Add a new file, register it in `registry.py`, and enable it in config.

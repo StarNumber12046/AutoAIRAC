@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Prepar3D v4 (`p3d4`) simulator adapter with version-specific torrent file patterns
+
+### Changed
+
+- P3D v5 and FSX torrent patterns are now version-specific (no longer share broad `*p3d*` / `*fsx*` patterns)
+
 ## [0.1.0] - 2026-07-13
 
 ### Added

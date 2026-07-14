@@ -10,13 +10,14 @@ import yaml
 from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings
 
-SimulatorId = Literal["xplane12", "msfs2020", "msfs2024", "p3d5", "fsx"]
+SimulatorId = Literal["xplane12", "msfs2020", "msfs2024", "p3d4", "p3d5", "fsx"]
 
 
 class PathsConfig(BaseModel):
     xplane12: str = ""
     msfs2020_community: str = ""
     msfs2024_community: str = ""
+    p3d4: str = ""
     p3d5: str = ""
     fsx: str = ""
 

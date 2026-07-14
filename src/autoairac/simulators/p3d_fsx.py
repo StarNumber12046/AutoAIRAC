@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 import shutil
+from abc import abstractmethod
 from pathlib import Path
 
 from autoairac.config import PathsConfig
@@ -51,8 +52,9 @@ class _LegacySimAdapter(SimulatorAdapter):
                 return int(match.group(1))
         return None
 
+    @abstractmethod
     def torrent_file_patterns(self) -> tuple[str, ...]:
-        return ("*p3d*", "*prepar3d*", "*fsx*", "*aerosoft*")
+        ...
 
     def install_from_staging(self, staging_dir: Path) -> InstallResult:
         navdata = self._navdata_dir()
@@ -82,12 +84,26 @@ class _LegacySimAdapter(SimulatorAdapter):
         )
 
 
+class P3D4Adapter(_LegacySimAdapter):
+    id = "p3d4"
+    display_name = "Prepar3D v4"
+    _default_path = Path("C:/Program Files/Lockheed Martin/Prepar3D v4")
+    _configured_attr = "p3d4"
+    _navdata_subdir = "NavData"
+
+    def torrent_file_patterns(self) -> tuple[str, ...]:
+        return ("*p3dv4*", "*p3d4*", "*p3d_v4*", "*as_p3d4*", "*as_p3dv4*")
+
+
 class P3D5Adapter(_LegacySimAdapter):
     id = "p3d5"
     display_name = "Prepar3D v5"
     _default_path = Path("C:/Program Files/Lockheed Martin/Prepar3D v5")
     _configured_attr = "p3d5"
     _navdata_subdir = "NavData"
+
+    def torrent_file_patterns(self) -> tuple[str, ...]:
+        return ("*p3dv5*", "*p3d5*", "*p3d_v5*", "*as_p3d5*", "*as_p3dv5*")
 
 
 class FSXAdapter(_LegacySimAdapter):
@@ -96,3 +112,6 @@ class FSXAdapter(_LegacySimAdapter):
     _default_path = Path("C:/Program Files (x86)/Steam/steamapps/common/FSX")
     _configured_attr = "fsx"
     _navdata_subdir = "NavData"
+
+    def torrent_file_patterns(self) -> tuple[str, ...]:
+        return ("*fsx*", "*as_fsx*", "*aerosoft*")

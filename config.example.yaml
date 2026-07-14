@@ -1,7 +1,7 @@
 # Copy to config.yaml and adjust paths/credentials.
 
 simulators:
-  # Enabled simulators: xplane12, msfs2020, msfs2024, p3d5, fsx
+  # Enabled simulators: xplane12, msfs2020, msfs2024, p3d4, p3d5, fsx
   enabled:
     - xplane12
 
@@ -9,6 +9,7 @@ paths:
   xplane12: "C:/X-Plane 12"
   msfs2020_community: ""   # auto-detected if empty
   msfs2024_community: ""
+  p3d4: "C:/Program Files/Lockheed Martin/Prepar3D v4"
   p3d5: "C:/Program Files/Lockheed Martin/Prepar3D v5"
   fsx: "C:/Program Files (x86)/Steam/steamapps/common/FSX"
 
