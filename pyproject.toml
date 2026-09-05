@@ -25,6 +25,7 @@ classifiers = [
 ]
 dependencies = [
     "beautifulsoup4>=4.12",
+    "browserbase>=1.18.1",
     "httpx>=0.27",
     "lxml>=5.0",
     "playwright>=1.40",

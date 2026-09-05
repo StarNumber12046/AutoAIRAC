@@ -51,7 +51,7 @@ class RuTrackerClient:
                     "BrowserBase selected but 'browserbase' SDK not installed. "
                     "Run: uv add browserbase,, then set BB_API_KEY env var."
                 )
-            api_key = os.environ.get("BB_API_KEY")
+            api_key = self._config.browserbase_api_key or os.environ.get("BB_API_KEY")
             if not api_key:
                 raise ValueError(
                     "BrowserBase selected but BB_API_KEY env var is missing. "

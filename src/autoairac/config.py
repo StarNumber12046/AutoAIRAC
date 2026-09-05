@@ -30,6 +30,7 @@ class RuTrackerConfig(BaseModel):
     search_query: str = "Navigraph AIRAC {cycle}"
     topic_id: int | None = None
     browser: Literal["playwright", "chrome", "browserbase"] = "playwright"
+    browserbase_api_key: str | None = None
 
 
 class QBittorrentConfig(BaseModel):
