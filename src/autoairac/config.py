@@ -26,8 +26,11 @@ class RuTrackerConfig(BaseModel):
     base_url: str = "https://rutracker.org"
     username: str = ""
     password: str = ""
+    cookie: str | None = None
     search_query: str = "Navigraph AIRAC {cycle}"
     topic_id: int | None = None
+    browser: Literal["playwright", "chrome", "browserbase"] = "playwright"
+    browserbase_api_key: str | None = None
 
 
 class QBittorrentConfig(BaseModel):

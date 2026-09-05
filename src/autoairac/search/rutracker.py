@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import logging
+import os
 import re
 from dataclasses import dataclass
 from urllib.parse import urljoin
 
-import httpx
 from bs4 import BeautifulSoup
+from playwright.sync_api import sync_playwright
 
 from autoairac.config import RuTrackerConfig
 
@@ -33,19 +34,73 @@ class RuTrackerClient:
 
     def __init__(self, config: RuTrackerConfig) -> None:
         self._config = config
-        self._client = httpx.Client(
-            base_url=config.base_url.rstrip("/"),
-            follow_redirects=True,
-            timeout=30.0,
-            headers={
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AutoAIRAC/0.1",
-                "Accept-Language": "ru-RU,ru;q=0.9,en;q=0.8",
-            },
-        )
+        if not config.base_url.startswith("https://"):
+            raise ValueError(
+                f"ruTracker base_url must use HTTPS, got: {config.base_url}. "
+                "Cloudflare requires a secure connection."
+            )
+        self._base_url = config.base_url.rstrip("/")
         self._logged_in = False
+        self._pw = None
+        self._browser = None
+        self._page = None
+
+    def _ensure_browser(self) -> None:
+        if self._page is not None:
+            return
+        if self._config.browser == "browserbase":
+            try:
+                from browserbase import Browserbase
+            except ImportError as err:
+                raise ImportError(
+                    "BrowserBase selected but 'browserbase' SDK not installed. "
+                    "Run: uv add browserbase,, then set BB_API_KEY env var."
+                ) from err
+            api_key = self._config.browserbase_api_key or os.environ.get("BB_API_KEY")
+            if not api_key:
+                raise ValueError(
+                    "BrowserBase selected but BB_API_KEY env var is missing. "
+                    "Get your key at browserbase.com, then: set BB_API_KEY=<key>"
+                )
+            bb = Browserbase(api_key=api_key)
+            session = bb.sessions.create()
+            # BrowserBase exposes a Playwright-compatible CDP URL via session.connect_url
+            self._pw = sync_playwright().start()
+            self._browser = self._pw.chromium.connect_over_cdp(
+                session.connect_url,
+                headers={"Authorization": f"Bearer {api_key}"},
+            )
+            logger.info("BrowserBase session started (%s).", session.id)
+        elif self._config.browser == "chrome":
+            self._pw = sync_playwright().start()
+            self._browser = self._pw.chromium.launch(
+                headless=False,
+                channel="chrome",
+                args=["--disable-blink-features=AutomationControlled"],
+            )
+        else:
+            self._pw = sync_playwright().start()
+            self._browser = self._pw.chromium.launch(headless=True)
+        context = self._browser.new_context()
+        if self._config.cookie:
+            domain = self._config.base_url.split("//")[1].split("/")[0]
+            context.add_cookies([{
+                "name": "bb_session",
+                "value": self._config.cookie,
+                "domain": domain,
+                "path": "/",
+                "secure": True,
+            }])
+        self._page = context.new_page()
 
     def close(self) -> None:
-        self._client.close()
+        if self._page:
+            self._page.close()
+        if self._browser is not None and self._config.browser != "browserbase":
+            self._browser.close()
+        if self._pw:
+            self._pw.stop()
+        self._page = self._browser = self._pw = None
 
     def __enter__(self) -> RuTrackerClient:
         return self
@@ -56,23 +111,31 @@ class RuTrackerClient:
     def login(self) -> None:
         if self._logged_in:
             return
+
+        self._ensure_browser()
+
+        if self._config.cookie:
+            self._logged_in = True
+            logger.debug("ruTracker using cookie authentication.")
+            return
+
         if not self._config.username or not self._config.password:
             logger.warning("ruTracker credentials not configured — download may fail.")
             return
 
-        response = self._client.post(
-            "/forum/login.php",
-            data={
-                "login_username": self._config.username,
-                "login_password": self._config.password,
-                "login": "Вход",
-            },
-        )
-        response.raise_for_status()
+        self._page.goto(f"{self._base_url}/forum/login.php")
+        final_url = self._page.url
+        if not final_url.startswith("https://"):
+            logger.error("Login form redirected to insecure URL: %s", final_url)
+            return
+        self._page.fill("input[name='login_username']", self._config.username)
+        self._page.fill("input[name='login_password']", self._config.password)
+        self._page.click("input[name='login']")
+        self._page.wait_for_load_state("networkidle")
 
-        if "login.php?logout" not in response.text and "logged-in-username" not in response.text:
-            index = self._client.get("/forum/index.php")
-            if "logged-in-username" not in index.text:
+        if "login.php?logout" not in self._page.content() and "logged-in-username" not in self._page.content():
+            self._page.goto(f"{self._base_url}/forum/index.php")
+            if "logged-in-username" not in self._page.content():
                 logger.error("ruTracker login failed — check username/password.")
                 return
 
@@ -115,12 +178,13 @@ class RuTrackerClient:
         return self._resolve_topic(topic_id, target_cycle, title=title)
 
     def _search(self, query: str) -> list[tuple[int, str]]:
-        response = self._client.get(
-            "/forum/tracker.php",
-            params={"nm": query},
-        )
-        response.raise_for_status()
-        soup = BeautifulSoup(response.text, "lxml")
+        self._ensure_browser()
+        url = f"{self._base_url}/forum/tracker.php?nm={query}"
+        self._page.goto(url)
+        self._page.wait_for_load_state("networkidle")
+
+        html = self._page.content()
+        soup = BeautifulSoup(html, "lxml")
 
         hits: list[tuple[int, str]] = []
         for link in soup.select("a.tLink, a.tracker__topic-title"):
@@ -179,9 +243,13 @@ class RuTrackerClient:
         *,
         title: str | None = None,
     ) -> TorrentSearchResult | None:
-        response = self._client.get(f"/forum/viewtopic.php?t={topic_id}")
-        response.raise_for_status()
-        soup = BeautifulSoup(response.text, "lxml")
+        self._ensure_browser()
+        url = f"{self._base_url}/forum/viewtopic.php?t={topic_id}"
+        self._page.goto(url)
+        self._page.wait_for_load_state("networkidle")
+
+        html = self._page.content()
+        soup = BeautifulSoup(html, "lxml")
 
         if title is None:
             title_tag = soup.select_one("h1.tm-title, h1")

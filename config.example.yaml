@@ -17,6 +17,8 @@ rutracker:
   base_url: "https://rutracker.org"
   username: ""
   password: ""
+  # Browser mode: playwright (default headless), chrome (visible real Chrome), browserbase (managed cloud browser)
+  browser: "chrome"
   # Search query template; {cycle} is replaced with the target AIRAC cycle.
   search_query: "AIRAC {cycle}"
   # Optional: pin a known topic ID instead of searching (faster, more reliable).
