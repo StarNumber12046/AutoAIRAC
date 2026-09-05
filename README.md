@@ -28,6 +28,14 @@ Each simulator is a pluggable adapter under `src/autoairac/simulators/`. Add a n
 - **ruTracker account** — required for magnet/torrent download links
 - **Windows 10/11** — native toast notifications via [winotify](https://pypi.org/project/winotify/)
 
+## Setup
+
+```powershell
+uv sync --group dev
+# Playwright browsers must be installed separately:
+uv run playwright install chromium
+```
+
 ## Quick start
 
 ```powershell
@@ -65,6 +73,7 @@ Copy `config.example.yaml` to `config.yaml` (gitignored). Key settings:
 | Key | Purpose |
 |-----|---------|
 | `simulators.enabled` | Which adapters to check/install |
+| `rutracker.browser` | Search backend: `playwright` / `chrome` / `browserbase` |
 | `paths.xplane12` | X-Plane root folder |
 | `rutracker.username` / `password` | Forum login |
 | `rutracker.topic_id` | Optional pinned topic (skips search) |

@@ -34,6 +34,11 @@ class RuTrackerClient:
 
     def __init__(self, config: RuTrackerConfig) -> None:
         self._config = config
+        if not config.base_url.startswith("https://"):
+            raise ValueError(
+                f"ruTracker base_url must use HTTPS, got: {config.base_url}. "
+                "Cloudflare requires a secure connection."
+            )
         self._base_url = config.base_url.rstrip("/")
         self._logged_in = False
         self._pw = None
@@ -46,11 +51,11 @@ class RuTrackerClient:
         if self._config.browser == "browserbase":
             try:
                 from browserbase import Browserbase
-            except ImportError:
+            except ImportError as err:
                 raise ImportError(
                     "BrowserBase selected but 'browserbase' SDK not installed. "
                     "Run: uv add browserbase,, then set BB_API_KEY env var."
-                )
+                ) from err
             api_key = self._config.browserbase_api_key or os.environ.get("BB_API_KEY")
             if not api_key:
                 raise ValueError(
@@ -84,6 +89,7 @@ class RuTrackerClient:
                 "value": self._config.cookie,
                 "domain": domain,
                 "path": "/",
+                "secure": True,
             }])
         self._page = context.new_page()
 
@@ -118,6 +124,10 @@ class RuTrackerClient:
             return
 
         self._page.goto(f"{self._base_url}/forum/login.php")
+        final_url = self._page.url
+        if not final_url.startswith("https://"):
+            logger.error("Login form redirected to insecure URL: %s", final_url)
+            return
         self._page.fill("input[name='login_username']", self._config.username)
         self._page.fill("input[name='login_password']", self._config.password)
         self._page.click("input[name='login']")
